@@ -17,15 +17,19 @@
         </tr>
       </thead>
       <tbody>
+        {% for tesouro in lista_tesouros %}
         <tr>
-          <td><img src="{% static "imgs/exemplo-de-icone.png" %}"></td>
-          <td>Tesouro de exemplo</td>
-          <td>200</td>
-          <td>5</td>
-          <td>1.000</td>
-          <td><img src="" alt="editar"></td>
-          <td><img src="" alt="Deletar"></td>
+          <td><img src="{{ tesouro.img_tesouro.url }}" alt="imagem tesouro"></td></td>
+          <td>{{ tesouro.nome }}</td>
+          <td>{{ tesouro.preco }}</td>
+          <td>{{ tesouro.quantidade }}</td>
+          <td>{{ tesouro.valor_total|floatformat:"-2" }}</td>
+            <td><a href="{% url "editar_tesouro" id=tesouro.id %}"><img src="{% static "imgs/edit.png" %}" alt="editar"></a></td>
+            <td>
+                <a href="{% url "deletar_tesouro" id=tesouro.id %}"><img src="{% static "imgs/delete.svg" %}" alt="Deletar"></a>
+            </td>
         </tr>
+    {% endfor %}
       </tbody>
       <tfoot>
         <tr>
