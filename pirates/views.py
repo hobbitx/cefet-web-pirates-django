@@ -2,17 +2,40 @@ from django.shortcuts import render
 from django.views import View
 from .models import Tesouro
 from django.db.models import F, ExpressionWrapper, DecimalField, Sum
+from django.urls import reverse
+from django.http import HttpResponseRedirect, HttpResponseNotFound
+from .forms import *
 
 class ListaTesouros(View):
      def get(self, request):
+        tesouros = Tesouro.objects.all()
+        valor_total = 0
+        for tesouro in tesouros:
+           valor_total = valor_total + tesouro.valor_total
 
-        type_total_value = DecimalField(max_digits=10, decimal_places=2)
-        total_value = ExpressionWrapper(F('preco') * F('quantidade'), output_field=type_total_value)
+        return render(request, 'lista_tesouros.html', {'lista_tesouros': tesouros, 'total': valor_total})
 
-        tesouros = Tesouro.objects.annotate(valor_total=total_value)
 
-        
-        context = {'lista_tesouros': tesouros}
-        context.update(tesouros.aggregate(total_geral=Sum('valor_total', output_field=type_total_value)))
 
-        return render(request, 'lista_tesouros.html', context)
+class SalvarTesouro(View):
+    def get(self, request, id=None):
+        try:
+            tesouro = Tesouro.objects.get(id=id)
+        except Tesouro.DoesNotExist:
+            tesouro = None
+
+        return render(request, 'salvar_tesouro.html', {'form': SalvarTesouroForm(instance=tesouro)})
+
+    def post(self, request, id=None):
+        try:
+            tesouro = Tesouro.objects.get(id=id)
+        except Tesouro.DoesNotExist:
+            tesouro = None
+
+        form = SalvarTesouroForm(request.POST, request.FILES, instance=tesouro)
+
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('ListaTesouros'))
+
+        return render(request, 'salvar_tesouro.html', {'form': form})

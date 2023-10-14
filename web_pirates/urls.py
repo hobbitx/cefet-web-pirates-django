@@ -22,4 +22,5 @@ from pirates.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', ListaTesouros.as_view(), name='listar_tesouros'),
+    path('inserir_tesouro/', SalvarTesouro.as_view(), name='inserir_tesouro'),
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
