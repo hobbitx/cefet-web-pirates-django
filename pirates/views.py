@@ -39,3 +39,14 @@ class SalvarTesouro(View):
             return HttpResponseRedirect(reverse('ListaTesouros'))
 
         return render(request, 'salvar_tesouro.html', {'form': form})
+
+
+class ExcluirTesouro(View):
+    def get(self, request, id):
+        try:
+            tesouro = Tesouro.objects.get(id=id)
+            tesouro.delete()
+        except Tesouro.DoesNotExist:
+            return HttpResponseNotFound()
+        return HttpResponseRedirect(reverse('ListaTesouros'))
+        
