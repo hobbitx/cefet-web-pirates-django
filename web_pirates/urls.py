@@ -24,4 +24,6 @@ urlpatterns = [
     path('', ListaTesouros.as_view(), name='ListaTesouros'),
     path('inserir_tesouro/', SalvarTesouro.as_view(), name='SalvarTesouro'),
     path('deletar_tesouro/<int:id>/', ExcluirTesouro.as_view(), name='ExcluirTesouro'),
+    path('editar_tesouro/<int:id>/', SalvarTesouro.as_view(), name='EditarTesouro'),
+    
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
